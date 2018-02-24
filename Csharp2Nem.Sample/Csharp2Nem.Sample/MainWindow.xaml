@@ -6,7 +6,13 @@
         xmlns:local="clr-namespace:Csharp2Nem.Sample"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
+    <Window.DataContext>
+        <local:ViewModel/>
+    </Window.DataContext>
     <Grid>
-        
+        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+            <TextBlock Text="{Binding Wallet.Balance, StringFormat={}{0} XEM}" FontSize="32" HorizontalAlignment="Center"/>
+            <Button Command="{Binding StartCommand}" Content="Start" Height="50" Width="200"/>
+        </StackPanel>
     </Grid>
 </Window>
