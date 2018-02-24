@@ -5,14 +5,51 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Csharp2Nem.Sample"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Background="#555555"
+        Title="Csharp2Nem Sample" Height="500" Width="700">
     <Window.DataContext>
         <local:ViewModel/>
     </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="TextWrapping" Value="NoWrap"/>
+        </Style>
+    </Window.Resources>    
     <Grid>
-        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-            <TextBlock Text="{Binding Wallet.Balance, StringFormat={}{0} XEM}" FontSize="32" HorizontalAlignment="Center"/>
-            <Button Command="{Binding StartCommand}" Content="Start" Height="50" Width="200"/>
-        </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="70"/>
+        </Grid.RowDefinitions>
+        <Grid Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="160"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="PublicKey:"/>
+                <TextBlock Text="Balance:"/>
+                <TextBlock Text="Importance:"/>
+                <TextBlock Text="HarvestedBlocks:"/>
+                <TextBlock Text="VestedBalance:"/>
+            </StackPanel>
+            <StackPanel Grid.Column="2" Orientation="Vertical">
+                <TextBlock Text="{Binding Wallet.PublicKey, StringFormat={}{0}}"/>
+                <TextBlock Text="{Binding Wallet.Balance, StringFormat={}{0} XEM}"/>
+                <TextBlock Text="{Binding Wallet.Importance, StringFormat={}{0}}"/>
+                <TextBlock Text="{Binding Wallet.HarvestedBlocks, StringFormat={}{0} Blocks}"/>
+                <TextBlock Text="{Binding Wallet.VestedBalance, StringFormat={}{0} XEM}"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="120"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Text="{Binding Wallet.Address, UpdateSourceTrigger=PropertyChanged}" FontSize="18" VerticalContentAlignment="Center" Margin="20"/>
+            <Button Command="{Binding StartCommand}" Grid.Column="1" Content="Wallet Open" Background="White" Margin="10,20"/>
+        </Grid>
     </Grid>
 </Window>

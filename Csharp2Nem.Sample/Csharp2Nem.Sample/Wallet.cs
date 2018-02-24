@@ -20,14 +20,37 @@ namespace Csharp2Nem.Sample
             get { return balance; }
             set { balance = value; }
         }
+        public string PublicKey
+        {
+            get { return publicKey; }
+            set { publicKey = value; }
+        }
+        public int HarvestedBlocks
+        {
+            get { return harvestedBlocks; }
+            set { harvestedBlocks = value; }
+        }
+        public string VestedBalance
+        {
+            get { return vestedBalance; }
+            set { vestedBalance = value; }
+        }
+        public double Importance
+        {
+            get { return importance; }
+            set { importance = value; }
+        }
 
         string address;
         string balance;
+        string publicKey;
+        string vestedBalance;
+        int harvestedBlocks;
+        double importance;
         Connection connection;
 
-        public Wallet(string address)
+        public Wallet()
         {
-            Address = address;
             connection = new Connection();
             connection.SetTestnet();
         }
@@ -41,6 +64,14 @@ namespace Csharp2Nem.Sample
                 var response = client.EndGetAccountInfo(result);
 
                 Balance = ((double)response.Account.Balance / 1000000).ToString("N6");
+                PublicKey = response.Account.PublicKey;
+                HarvestedBlocks = response.Account.HarvestedBlocks;
+                Importance = response.Account.Importance;
+                VestedBalance = ((double)response.Account.VestedBalance / 1000000).ToString("N6");
+
+                var mosaic = new NamespaceMosaicClient(connection);
+                var mosaicResult = mosaic.BeginGetMosaicsOwned(Address);
+                var mosaicResponse = mosaic.EndGetMosaicsOwned(mosaicResult);
             }
             catch(Exception ex)
             {

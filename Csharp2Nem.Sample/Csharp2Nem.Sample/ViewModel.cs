@@ -15,9 +15,10 @@ namespace Csharp2Nem.Sample
 
         public ViewModel()
         {
+            Wallet = new Wallet();
+
             StartCommand = new DelegateCommand((parameter) =>
             {
-                Wallet = new Wallet("TAQBNLN7NTE3CY2SZ7I5XTZZWBL5AADAXWQ6ZNOP");
                 Wallet.Sync();
                 OnPropertyChanged(nameof(Wallet));
             });
