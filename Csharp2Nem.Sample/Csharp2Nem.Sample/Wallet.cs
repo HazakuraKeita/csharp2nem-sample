@@ -2,6 +2,7 @@
 using CSharp2nem.RequestClients;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,6 +41,11 @@ namespace Csharp2Nem.Sample
             get { return importance; }
             set { importance = value; }
         }
+        public ObservableCollection<Mosaic> Mosaics
+        {
+            get { return mosaics; }
+            set { mosaics = value; }
+        }
 
         string address;
         string balance;
@@ -47,10 +53,13 @@ namespace Csharp2Nem.Sample
         string vestedBalance;
         int harvestedBlocks;
         double importance;
+        ObservableCollection<Mosaic> mosaics;
         Connection connection;
 
         public Wallet()
         {
+            Mosaics = new ObservableCollection<Mosaic>();
+
             connection = new Connection();
             connection.SetTestnet();
         }
@@ -59,19 +68,34 @@ namespace Csharp2Nem.Sample
         {
             try
             {
-                var client = new AccountClient(connection);
-                var result = client.BeginGetAccountInfoFromAddress(Address);
-                var response = client.EndGetAccountInfo(result);
+                // To get an account information from the address.
+                var accountClient = new AccountClient(connection);
+                var accountResult = accountClient.BeginGetAccountInfoFromAddress(Address);
+                var accountResponse = accountClient.EndGetAccountInfo(accountResult);
 
-                Balance = ((double)response.Account.Balance / 1000000).ToString("N6");
-                PublicKey = response.Account.PublicKey;
-                HarvestedBlocks = response.Account.HarvestedBlocks;
-                Importance = response.Account.Importance;
-                VestedBalance = ((double)response.Account.VestedBalance / 1000000).ToString("N6");
+                Balance = ((double)accountResponse.Account.Balance / 1000000).ToString("N6");
+                PublicKey = accountResponse.Account.PublicKey.Substring(0,10) + "**********...";
+                HarvestedBlocks = accountResponse.Account.HarvestedBlocks;
+                Importance = accountResponse.Account.Importance;
+                VestedBalance = ((double)accountResponse.Account.VestedBalance / 1000000).ToString("N6");
 
-                var mosaic = new NamespaceMosaicClient(connection);
-                var mosaicResult = mosaic.BeginGetMosaicsOwned(Address);
-                var mosaicResponse = mosaic.EndGetMosaicsOwned(mosaicResult);
+                // To get mosaic information of the account from the address.
+                var mosaicClient = new NamespaceMosaicClient(connection);
+                var mosaicResult = mosaicClient.BeginGetMosaicsOwned(Address);
+                var mosaicResponse = mosaicClient.EndGetMosaicsOwned(mosaicResult);
+
+                foreach(var data in mosaicResponse.Data)
+                {
+                    // XEM is mosaic, but it does not shown because it has already been shown on the above.
+                    if (data.MosaicId.Name != "xem")
+                    {
+                        Mosaics.Add(new Mosaic
+                        {
+                            Name = data.MosaicId.Name,
+                            Amount = data.Quantity.ToString("N6")
+                        });
+                    }
+                }
             }
             catch(Exception ex)
             {

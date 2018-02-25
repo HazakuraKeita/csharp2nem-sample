@@ -34,6 +34,7 @@
                 <TextBlock Text="Importance:"/>
                 <TextBlock Text="HarvestedBlocks:"/>
                 <TextBlock Text="VestedBalance:"/>
+                <TextBlock Text="Mosaic:" Margin="0,0,0,80"/>
             </StackPanel>
             <StackPanel Grid.Column="2" Orientation="Vertical">
                 <TextBlock Text="{Binding Wallet.PublicKey, StringFormat={}{0}}"/>
@@ -41,6 +42,40 @@
                 <TextBlock Text="{Binding Wallet.Importance, StringFormat={}{0}}"/>
                 <TextBlock Text="{Binding Wallet.HarvestedBlocks, StringFormat={}{0} Blocks}"/>
                 <TextBlock Text="{Binding Wallet.VestedBalance, StringFormat={}{0} XEM}"/>
+                <ListView ItemsSource="{Binding Wallet.Mosaics}" Height="100">
+                    <ListView.Template>
+                        <ControlTemplate>
+                            <ScrollViewer PanningMode="VerticalOnly"
+                            VerticalScrollBarVisibility="Visible"
+                            HorizontalScrollBarVisibility="Hidden">
+                                <ItemsPresenter/>
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ListView.Template>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="FontSize" Value="18"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="TextWrapping" Value="NoWrap"/>
+                                        <Setter Property="HorizontalAlignment" Value="Left"/>
+                                    </Style>
+                                </Grid.Resources>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Name, StringFormat={}{0}:, Mode=OneWay}"/>
+                                <TextBlock Grid.Column="1">
+                                    <Run Text="{Binding Amount, Mode=OneWay}"/>
+                                    <Run Text="{Binding Name, StringFormat= {}{0}, Mode=OneWay}"/>
+                                </TextBlock>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">
@@ -49,7 +84,7 @@
                 <ColumnDefinition Width="120"/>
             </Grid.ColumnDefinitions>
             <TextBox Text="{Binding Wallet.Address, UpdateSourceTrigger=PropertyChanged}" FontSize="18" VerticalContentAlignment="Center" Margin="20"/>
-            <Button Command="{Binding StartCommand}" Grid.Column="1" Content="Wallet Open" Background="White" Margin="10,20"/>
+            <Button Command="{Binding StartCommand}" Grid.Column="1" Content="Wallet Open" Background="White" Margin="0,20,20,20"/>
         </Grid>
     </Grid>
 </Window>
