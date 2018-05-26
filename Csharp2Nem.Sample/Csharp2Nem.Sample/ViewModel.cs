@@ -27,7 +27,7 @@ namespace Csharp2Nem.Sample
 
             SendCommand = new DelegateCommand((parameter) =>
             {
-
+                new SendWindow(new SendWindowViewModel(Wallet, RecipientAddress)).ShowDialog();
             });
         }
 

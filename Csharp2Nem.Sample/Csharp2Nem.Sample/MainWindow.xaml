@@ -10,13 +10,6 @@
     <Window.DataContext>
         <local:ViewModel/>
     </Window.DataContext>
-    <Window.Resources>
-        <Style TargetType="TextBlock">
-            <Setter Property="FontSize" Value="18"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="TextWrapping" Value="NoWrap"/>
-        </Style>
-    </Window.Resources>    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -87,7 +80,9 @@
             </Grid.ColumnDefinitions>
             <TextBlock Text="Address:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
             <TextBox Text="{Binding Wallet.Address, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" FontSize="18" VerticalContentAlignment="Center" Height="30" Width="430"/>
-            <Button Command="{Binding OpenCommand}" Grid.Column="2" Content="Wallet Open" Background="White" Height="30" Width="100" HorizontalAlignment="Left"/>
+            <Button Command="{Binding OpenCommand}" Grid.Column="2" Background="White" Height="30" Width="100" HorizontalAlignment="Left">
+                <TextBlock Text="Wallet Open" FontSize="12" Foreground="Black"/>
+            </Button>
         </Grid>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
@@ -97,7 +92,9 @@
             </Grid.ColumnDefinitions>
             <TextBlock Text="Recipient:" HorizontalAlignment="Right" VerticalAlignment="Top"/>
             <TextBox Text="{Binding RecipientAddress, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" FontSize="18" VerticalContentAlignment="Center" Height="30" Width="430" VerticalAlignment="Top"/>
-            <Button Command="{Binding SendCommand}" Grid.Column="2" Content="Send" Background="White" Height="30" Width="100" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Button Command="{Binding SendCommand}" Grid.Column="2" Background="White" Height="30" Width="100" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <TextBlock Text="Send" FontSize="12" Foreground="Black"/>
+            </Button>
         </Grid>
     </Grid>
 </Window>

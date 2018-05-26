@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:Csharp2Nem.Sample"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="TextWrapping" Value="NoWrap"/>
+        </Style>
     </Application.Resources>
 </Application>

@@ -7,12 +7,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Csharp2Nem.Sample
 {
-    class Wallet
+    public class Wallet
     {
         public string Address
         {
@@ -49,6 +51,19 @@ namespace Csharp2Nem.Sample
             get { return mosaics; }
             set { mosaics = value; }
         }
+        public string PrivateKey
+        {
+            get { return Marshal.PtrToStringUni(Marshal.SecureStringToGlobalAllocUnicode(privateKey)); }
+            set
+            {
+                privateKey.Clear();
+
+                foreach (var character in value)
+                {
+                    privateKey.AppendChar(character);
+                }
+            }
+        }
 
         string address;
         string balance;
@@ -56,6 +71,7 @@ namespace Csharp2Nem.Sample
         string vestedBalance;
         int harvestedBlocks;
         double importance;
+        SecureString privateKey = new SecureString();
         ObservableCollection<Mosaic> mosaics;
         Connection connection;
 
@@ -89,11 +105,7 @@ namespace Csharp2Nem.Sample
 
                 foreach(var data in mosaicResponse.Data)
                 {
-                    // XEM is mosaic, but it does not shown because it has already been shown on the above.
-                    if (data.MosaicId.Name != "xem")
-                    {
-                        Mosaics.Add(new Mosaic(data.MosaicId.NamespaceId, data.MosaicId.Name, data.Quantity));
-                    }
+                    Mosaics.Add(new Mosaic(data.MosaicId.NamespaceId, data.MosaicId.Name, data.Quantity));
                 }
             }
             catch(Exception ex)
@@ -106,13 +118,15 @@ namespace Csharp2Nem.Sample
         {
             try
             {
+                mosaic.Quantity = amount;
+
                 var accountFactory = new PrivateKeyAccountClientFactory(connection);
-                var accClient = accountFactory.FromPrivateKey(string.Empty);
+                var accClient = accountFactory.FromPrivateKey(PrivateKey);
                 var mosaicList = new List<Mosaic>() { mosaic };
 
                 var transData = new TransferTransactionData()
                 {
-                    Amount = amount,
+                    Amount = 1000000,
                     Message = message,
                     RecipientAddress = address,
                     ListOfMosaics = mosaicList,
