@@ -1,4 +1,7 @@
 ﻿using CSharp2nem.Connectivity;
+using CSharp2nem.Model.AccountSetup;
+using CSharp2nem.Model.DataModels;
+using CSharp2nem.Model.Transfer.Mosaics;
 using CSharp2nem.RequestClients;
 using System;
 using System.Collections.Generic;
@@ -89,15 +92,39 @@ namespace Csharp2Nem.Sample
                     // XEM is mosaic, but it does not shown because it has already been shown on the above.
                     if (data.MosaicId.Name != "xem")
                     {
-                        Mosaics.Add(new Mosaic
-                        {
-                            Name = data.MosaicId.Name,
-                            Amount = data.Quantity.ToString("N6")
-                        });
+                        Mosaics.Add(new Mosaic(data.MosaicId.NamespaceId, data.MosaicId.Name, data.Quantity));
                     }
                 }
             }
             catch(Exception ex)
+            {
+
+            }
+        }
+
+        public void Send(string address, string message, Mosaic mosaic, long amount)
+        {
+            try
+            {
+                var accountFactory = new PrivateKeyAccountClientFactory(connection);
+                var accClient = accountFactory.FromPrivateKey(string.Empty);
+                var mosaicList = new List<Mosaic>() { mosaic };
+
+                var transData = new TransferTransactionData()
+                {
+                    Amount = amount,
+                    Message = message,
+                    RecipientAddress = address,
+                    ListOfMosaics = mosaicList,
+                };
+                
+                var asyncResult = accClient.BeginSendTransaction(transData);
+
+                while (!asyncResult.IsCompleted) ;
+
+                var response = accClient.EndTransaction(asyncResult);
+            }
+            catch (Exception ex)
             {
 
             }

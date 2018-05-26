@@ -10,17 +10,24 @@ namespace Csharp2Nem.Sample
 {
     class ViewModel : INotifyPropertyChanged
     {
+        public string RecipientAddress { get; set; }
         public Wallet Wallet { get; private set; }
-        public ICommand StartCommand { get; private set; }
+        public ICommand OpenCommand { get; private set; }
+        public ICommand SendCommand { get; private set; }
 
         public ViewModel()
         {
             Wallet = new Wallet();
 
-            StartCommand = new DelegateCommand((parameter) =>
+            OpenCommand = new DelegateCommand((parameter) =>
             {
                 Wallet.Sync();
                 OnPropertyChanged(nameof(Wallet));
+            });
+
+            SendCommand = new DelegateCommand((parameter) =>
+            {
+
             });
         }
 
