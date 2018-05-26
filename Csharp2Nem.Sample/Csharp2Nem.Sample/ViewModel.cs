@@ -14,21 +14,21 @@ namespace Csharp2Nem.Sample
         public Wallet Wallet { get; private set; }
         public ICommand OpenCommand { get; private set; }
         public ICommand SendCommand { get; private set; }
+        public ICommand UpdateCommand { get; private set; }
 
         public ViewModel()
         {
             Wallet = new Wallet();
 
-            OpenCommand = new DelegateCommand((parameter) =>
-            {
-                Wallet.Sync();
-                OnPropertyChanged(nameof(Wallet));
-            });
+            OpenCommand = new DelegateCommand((parameter) => Sync());
+            SendCommand = new DelegateCommand((parameter) => new SendWindow(new SendWindowViewModel(Wallet, RecipientAddress)).ShowDialog());
+            UpdateCommand = new DelegateCommand((parameter => Sync()));
+        }
 
-            SendCommand = new DelegateCommand((parameter) =>
-            {
-                new SendWindow(new SendWindowViewModel(Wallet, RecipientAddress)).ShowDialog();
-            });
+        void Sync()
+        {
+            Wallet.Sync();
+            OnPropertyChanged(nameof(Wallet));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

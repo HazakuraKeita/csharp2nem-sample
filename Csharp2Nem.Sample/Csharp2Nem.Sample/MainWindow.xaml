@@ -6,14 +6,15 @@
         xmlns:local="clr-namespace:Csharp2Nem.Sample"
         mc:Ignorable="d"
         Background="#555555"
-        Title="Csharp2Nem Sample" Height="400" Width="700">
+        Title="Csharp2Nem Sample" Height="450" Width="700">
     <Window.DataContext>
         <local:ViewModel/>
     </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="70"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <Grid Margin="20,20,20,0">
@@ -78,9 +79,9 @@
                 <ColumnDefinition/>
                 <ColumnDefinition Width="120"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Address:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-            <TextBox Text="{Binding Wallet.Address, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" FontSize="18" VerticalContentAlignment="Center" Height="30" Width="430"/>
-            <Button Command="{Binding OpenCommand}" Grid.Column="2" Background="White" Height="30" Width="100" HorizontalAlignment="Left">
+            <TextBlock Text="Address:" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+            <TextBox Text="{Binding Wallet.Address, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" FontSize="18" VerticalContentAlignment="Center" Height="30" Width="430" VerticalAlignment="Top"/>
+            <Button Command="{Binding OpenCommand}" Grid.Column="2" Background="White" Height="30" Width="100" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <TextBlock Text="Wallet Open" FontSize="12" Foreground="Black"/>
             </Button>
         </Grid>
@@ -94,6 +95,15 @@
             <TextBox Text="{Binding RecipientAddress, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" FontSize="18" VerticalContentAlignment="Center" Height="30" Width="430" VerticalAlignment="Top"/>
             <Button Command="{Binding SendCommand}" Grid.Column="2" Background="White" Height="30" Width="100" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <TextBlock Text="Send" FontSize="12" Foreground="Black"/>
+            </Button>
+        </Grid>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="120"/>
+            </Grid.ColumnDefinitions>
+            <Button Command="{Binding UpdateCommand}" Grid.Column="2" Background="White" Height="30" Width="100" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <TextBlock Text="Update" FontSize="12" Foreground="Black"/>
             </Button>
         </Grid>
     </Grid>

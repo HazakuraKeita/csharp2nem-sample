@@ -103,7 +103,9 @@ namespace Csharp2Nem.Sample
                 var mosaicResult = mosaicClient.BeginGetMosaicsOwned(Address);
                 var mosaicResponse = mosaicClient.EndGetMosaicsOwned(mosaicResult);
 
-                foreach(var data in mosaicResponse.Data)
+                Mosaics.Clear();
+
+                foreach (var data in mosaicResponse.Data)
                 {
                     Mosaics.Add(new Mosaic(data.MosaicId.NamespaceId, data.MosaicId.Name, data.Quantity));
                 }
@@ -114,33 +116,44 @@ namespace Csharp2Nem.Sample
             }
         }
 
-        public void Send(string address, string message, Mosaic mosaic, long amount)
+        public bool Send(string address, string message, Mosaic mosaic, long amount)
         {
             try
             {
-                mosaic.Quantity = amount;
-
                 var accountFactory = new PrivateKeyAccountClientFactory(connection);
                 var accClient = accountFactory.FromPrivateKey(PrivateKey);
-                var mosaicList = new List<Mosaic>() { mosaic };
 
-                var transData = new TransferTransactionData()
+                TransferTransactionData transData;
+                if (mosaic.MosaicName == "xem")
                 {
-                    Amount = 1000000,
-                    Message = message,
-                    RecipientAddress = address,
-                    ListOfMosaics = mosaicList,
-                };
+                    transData = new TransferTransactionData()
+                    {
+                        Amount = amount,
+                        Message = message,
+                        RecipientAddress = address,
+                    };
+                }
+                else
+                {
+                    mosaic.Quantity = amount;
+                    transData = new TransferTransactionData()
+                    {
+                        Amount = 1000000,
+                        Message = message,
+                        RecipientAddress = address,
+                        ListOfMosaics = new List<Mosaic>() { mosaic },
+                    };
+                }
                 
                 var asyncResult = accClient.BeginSendTransaction(transData);
 
                 while (!asyncResult.IsCompleted) ;
 
-                var response = accClient.EndTransaction(asyncResult);
+                return accClient.EndTransaction(asyncResult).Message == "SUCCESS";
             }
             catch (Exception ex)
             {
-
+                return false;
             }
         }
     }

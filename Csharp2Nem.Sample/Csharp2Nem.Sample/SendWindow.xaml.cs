@@ -22,6 +22,7 @@ namespace Csharp2Nem.Sample
         public SendWindow(SendWindowViewModel viewModel)
         {
             InitializeComponent();
+            viewModel.Closing = Close;
             DataContext = viewModel;
         }
     }

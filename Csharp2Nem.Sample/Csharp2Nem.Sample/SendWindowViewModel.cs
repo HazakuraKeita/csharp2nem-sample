@@ -17,6 +17,7 @@ namespace Csharp2Nem.Sample
         public string Message { get; set; }
         public Wallet Wallet { get; private set; }
         public Mosaic SelectedMosaic { get; set; }
+        public Action Closing { get; set; }
         public ICommand SendCommand { get; private set; }
 
         public SendWindowViewModel(Wallet wallet, string address)
@@ -27,7 +28,12 @@ namespace Csharp2Nem.Sample
             {
                 try
                 {
-                    Wallet.Send(Recipient, Message, SelectedMosaic, long.Parse(Amount));
+                    var isSuccess = Wallet.Send(Recipient, Message, SelectedMosaic, long.Parse(Amount));
+
+                    if (isSuccess)
+                    {
+                        Closing();
+                    }
                 }
                 catch (Exception ex)
                 {
