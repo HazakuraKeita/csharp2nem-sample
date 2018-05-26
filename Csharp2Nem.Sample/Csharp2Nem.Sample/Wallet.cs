@@ -121,7 +121,7 @@ namespace Csharp2Nem.Sample
             try
             {
                 var accountFactory = new PrivateKeyAccountClientFactory(connection);
-                var accClient = accountFactory.FromPrivateKey(PrivateKey);
+                var accountClient = accountFactory.FromPrivateKey(PrivateKey);
 
                 TransferTransactionData transData;
                 if (mosaic.MosaicName == "xem")
@@ -145,11 +145,11 @@ namespace Csharp2Nem.Sample
                     };
                 }
                 
-                var asyncResult = accClient.BeginSendTransaction(transData);
+                var accountResult = accountClient.BeginSendTransaction(transData);
 
-                while (!asyncResult.IsCompleted) ;
+                while (!accountResult.IsCompleted) ;
 
-                return accClient.EndTransaction(asyncResult).Message == "SUCCESS";
+                return accountClient.EndTransaction(accountResult).Message == "SUCCESS";
             }
             catch (Exception ex)
             {
